@@ -4,7 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 const App = memo(() => {
   const [myApiKey, setApiKey] = useState<string>();
   const [bookInputCount, setBookInputCount] = useState<number>(1);
-  const [geminiRes, setGeminiRes] = useState<string[]>([]);
+  const [geminiRes, setGeminiRes] = useState<string[]>(["책을 추천 받아 보십시오."]);
 
   const onApiKeyFormSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -126,23 +126,23 @@ const App = memo(() => {
             </p>
           </section>
 
-          <section className="border-2 p-4">
+          <section className="border-2 p-4 space-y-2">
             <h2>요청</h2>
-            <div className="flex flex-row grow">
+            <div className="flex flex-row grow space-x-2">
               <label htmlFor="api-req-user-info">userInfo</label>
               <input
                 name="api-req-user-info"
                 form="form-api-req"
-                className="border-2 grow "
+                className="border-2 grow rounded-md"
                 placeholder="유저정보(예: 중학교 2학년)"
               ></input>
             </div>
-            <div className="flex flex-row grow">
+            <div className="flex flex-row grow space-x-2">
               <label htmlFor="api-req-user-req">userReq</label>
               <input
                 name="api-req-user-req"
                 form="form-api-req"
-                className="border-2 grow "
+                className="border-2 grow rounded-md"
                 placeholder="요청내용(예: 2학기 국어 수행평가용 도서 추천)"
               ></input>
             </div>
@@ -151,7 +151,7 @@ const App = memo(() => {
               {Array.from({ length: bookInputCount }).map((_, index) => {
                 return (
                   <input
-                    className="border-2"
+                    className="border-2 rounded-md "
                     key={`${index}-bookinfoInput`}
                     form="form-api-req"
                     name="api-req-book-info"
@@ -160,7 +160,7 @@ const App = memo(() => {
                 );
               })}
               <button
-                className="border-2"
+                className="border-2 hover:bg-amber-500/20  rounded-md"
                 onClick={() => {
                   setBookInputCount(bookInputCount + 1);
                 }}
@@ -168,23 +168,26 @@ const App = memo(() => {
                 책 추가++
               </button>
             </div>
-
-            <button
-              className="rounded-md border-2 grow w-full bg-emerald-500/30 hover:bg-emerald-500/50"
-              type="submit"
-              form="form-api-req"
-            >
-              책 추천 받기
-            </button>
+            <div>
+              <button
+                className="rounded-md border-2 grow w-full bg-emerald-500/30 hover:bg-emerald-500/50"
+                type="submit"
+                form="form-api-req"
+              >
+                책 추천 받기
+              </button>
+            </div>
           </section>
-          <article className="border-2 px-5">
-            <h2>GEMINI답변</h2>
-            <pre className="font-sans whitespace-pre-wrap break-words">
-              {geminiRes.map((res, index) => {
-                return <span key={`${index}-geminiRes`}>{res}</span>;
-              })}
-            </pre>
-          </article>
+          <section   className="border-2 px-5">
+            <h2 className="font-bold text-center">GEMINI답변</h2>
+            <article>
+              <pre className="font-sans whitespace-pre-wrap break-words bg-neutral-100/10 min-h-28">
+                {geminiRes.map((res, index) => {
+                  return <span key={`${index}-geminiRes`}>{res}</span>;
+                })}
+              </pre>
+            </article>
+          </section>
 
           <form id="form-api-key" onSubmit={onApiKeyFormSubmit}></form>
           <form id="form-api-req" onSubmit={onApiReqFormSubmit}></form>
