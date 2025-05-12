@@ -107,6 +107,7 @@ const App = memo(() => {
       <section>
         <input
           placeholder="GOOGLE_AI_STUDIO_API_KEY"
+          type="text"
           name="api-key"
           form="form-api-key"
           className="border-2"
