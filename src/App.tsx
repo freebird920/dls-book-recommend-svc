@@ -83,11 +83,28 @@ const App = memo(() => {
     [geminiReq, myApiKey]
   );
   return (
-    <article className="space-y-2">
+    <article className="@container space-y-2">
       <h1>DLS 도서추천 서비스 예시</h1>
-      <section className="border-2 px-5">
+      <section className="border-2 px-5 flex flex-col space-y-2">
         <h2>APIKEY</h2>
+        <section className="flex space-x-2">
+          <input
+            placeholder="GOOGLE_AI_STUDIO_API_KEY"
+            type="text"
+            name="api-key"
+            form="form-api-key"
+            className="border-2 grow rounded-md"
+          ></input>
+          <button
+            form="form-api-key"
+            className="border-2 px-2 rounded-md"
+            type="submit"
+          >
+            입력
+          </button>
+        </section>
         <input
+          className="border-2 rounded-md grow"
           placeholder={"API key 입력하고 입력버튼 누르십시오."}
           readOnly={true}
           defaultValue={myApiKey}
@@ -103,18 +120,6 @@ const App = memo(() => {
           </a>
           를 통해 발급받을 수 있습니다.
         </p>
-      </section>
-      <section>
-        <input
-          placeholder="GOOGLE_AI_STUDIO_API_KEY"
-          type="text"
-          name="api-key"
-          form="form-api-key"
-          className="border-2"
-        ></input>
-        <button form="form-api-key" className="border-2" type="submit">
-          입력
-        </button>
       </section>
 
       <section className="border-2 p-4">
