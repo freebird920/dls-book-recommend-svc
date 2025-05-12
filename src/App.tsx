@@ -1,10 +1,12 @@
 import { Fragment, memo, useCallback, useState } from "react";
 import { GoogleGenAI } from "@google/genai";
-
+import ReactMarkdown from "react-markdown";
 const App = memo(() => {
   const [myApiKey, setApiKey] = useState<string>();
   const [bookInputCount, setBookInputCount] = useState<number>(1);
-  const [geminiRes, setGeminiRes] = useState<string[]>(["책을 추천 받아 보십시오."]);
+  const [geminiRes, setGeminiRes] = useState<string[]>([
+    "책을 추천 받아 보십시오.",
+  ]);
 
   const onApiKeyFormSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -12,7 +14,7 @@ const App = memo(() => {
       const formData = new FormData(e.currentTarget);
       setApiKey(formData.get("api-key") as string);
     },
-    []
+    [],
   );
 
   const geminiReq = useCallback(
@@ -50,7 +52,7 @@ const App = memo(() => {
         setGeminiRes((prev) => [...prev, chunk?.text ?? ""]);
       }
     },
-    [myApiKey]
+    [myApiKey],
   );
   const onApiReqFormSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -61,13 +63,13 @@ const App = memo(() => {
         const userInfo: string = formData.get("api-req-user-info") as string;
         if (!userInfo) throw new Error("유저정보를 입력해주십시오.");
         const bookInfo: string[] = formData.getAll(
-          "api-req-book-info"
+          "api-req-book-info",
         ) as string[];
         const userReq: string = formData.get("api-req-user-req") as string;
         if (!userReq) throw new Error("요청내용을 입력해주십시오.");
         console.log(userInfo, bookInfo, userReq);
         const msg = `다음 사용자가 읽을 만한 도서를 추천해줘 \n 사용자: ${userInfo} \n 최근 읽은 도서: ${bookInfo.flatMap(
-          (book) => book
+          (book) => book,
         )} \n 요청사항: ${userReq})  } `;
         setGeminiRes([""]);
 
@@ -80,16 +82,17 @@ const App = memo(() => {
         }
       }
     },
-    [geminiReq, myApiKey]
+    [geminiReq, myApiKey],
   );
+
   return (
     <Fragment>
       <div className="@container">
-        <article className="mx-auto space-y-2 max-w-2xl p-4">
-          <h1 className="font-extrabold text-center">
+        <article className="mx-auto max-w-2xl space-y-2 p-4">
+          <h1 className="text-center font-extrabold">
             DLS 도서추천 서비스 예시
           </h1>
-          <section className="border-2 px-5 flex flex-col space-y-2">
+          <section className="flex flex-col space-y-2 border-2 px-5">
             <h2>APIKEY</h2>
             <section className="flex space-x-2">
               <input
@@ -97,18 +100,18 @@ const App = memo(() => {
                 type="text"
                 name="api-key"
                 form="form-api-key"
-                className="border-2 grow rounded-md"
+                className="grow rounded-md border-2"
               ></input>
               <button
                 form="form-api-key"
-                className="border-2 px-2 rounded-md"
+                className="rounded-md border-2 px-2"
                 type="submit"
               >
                 입력
               </button>
             </section>
             <input
-              className="border-2 rounded-md grow"
+              className="grow rounded-md border-2"
               placeholder={"API key 입력하고 입력버튼 누르십시오."}
               readOnly={true}
               defaultValue={myApiKey}
@@ -126,23 +129,23 @@ const App = memo(() => {
             </p>
           </section>
 
-          <section className="border-2 p-4 space-y-2">
+          <section className="space-y-2 border-2 p-4">
             <h2>요청</h2>
-            <div className="flex flex-row grow space-x-2">
+            <div className="flex grow flex-row space-x-2">
               <label htmlFor="api-req-user-info">userInfo</label>
               <input
                 name="api-req-user-info"
                 form="form-api-req"
-                className="border-2 grow rounded-md"
+                className="grow rounded-md border-2"
                 placeholder="유저정보(예: 중학교 2학년)"
               ></input>
             </div>
-            <div className="flex flex-row grow space-x-2">
+            <div className="flex grow flex-row space-x-2">
               <label htmlFor="api-req-user-req">userReq</label>
               <input
                 name="api-req-user-req"
                 form="form-api-req"
-                className="border-2 grow rounded-md"
+                className="grow rounded-md border-2"
                 placeholder="요청내용(예: 2학기 국어 수행평가용 도서 추천)"
               ></input>
             </div>
@@ -151,7 +154,7 @@ const App = memo(() => {
               {Array.from({ length: bookInputCount }).map((_, index) => {
                 return (
                   <input
-                    className="border-2 rounded-md "
+                    className="rounded-md border-2"
                     key={`${index}-bookinfoInput`}
                     form="form-api-req"
                     name="api-req-book-info"
@@ -160,7 +163,7 @@ const App = memo(() => {
                 );
               })}
               <button
-                className="border-2 hover:bg-amber-500/20  rounded-md"
+                className="rounded-md border-2 hover:bg-amber-500/20"
                 onClick={() => {
                   setBookInputCount(bookInputCount + 1);
                 }}
@@ -170,7 +173,7 @@ const App = memo(() => {
             </div>
             <div>
               <button
-                className="rounded-md border-2 grow w-full bg-emerald-500/30 hover:bg-emerald-500/50"
+                className="w-full grow rounded-md border-2 bg-emerald-500/30 hover:bg-emerald-500/50"
                 type="submit"
                 form="form-api-req"
               >
@@ -178,15 +181,12 @@ const App = memo(() => {
               </button>
             </div>
           </section>
-          <section   className="border-2 px-5">
-            <h2 className="font-bold text-center">GEMINI답변</h2>
-            <article>
-              <pre className="font-sans whitespace-pre-wrap break-words bg-neutral-100/10 min-h-28">
-                {geminiRes.map((res, index) => {
-                  return <span key={`${index}-geminiRes`}>{res}</span>;
-                })}
-              </pre>
-            </article>
+          <section className="border-2 px-5">
+            <h2 className="text-center font-bold">GEMINI답변</h2>
+
+            <div className="prose dark:prose-invert max-w-none">
+              <ReactMarkdown>{geminiRes.join("")}</ReactMarkdown>
+            </div>
           </section>
 
           <form id="form-api-key" onSubmit={onApiKeyFormSubmit}></form>
