@@ -1,5 +1,5 @@
 import { Fragment, memo, useCallback, useState } from "react";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, HarmBlockThreshold, HarmCategory } from "@google/genai";
 import ReactMarkdown from "react-markdown";
 
 //types
@@ -42,6 +42,24 @@ const App = memo(() => {
       const config = {
         responseMimeType: "text/plain",
         tools,
+        safetySettings: [
+          {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE, // Block some
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE, // Block some
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE, // Block some
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE, // Block some
+          },
+        ],
         systemInstruction: [
           {
             text: `* **IMPORTANT** Language: Korean. \n You can only reply once and you never receive next message from user. \n * This service is for School Library in Republic of Korea. \n when you determine User's literacy, Consider the User's reading history.  \n Must consider the User's requirement. \n * You must state Author with Title \n When you recommend books, the number of books is about 3~5. \n When you recommend a translated book, You must state the Korean Title of the book. \n * **important** You must recommend for book that is fit for School Library of Republic of Korea. \n **IMPORTANT** Cross check with google search for check the book is in real world`,
@@ -89,7 +107,7 @@ const App = memo(() => {
         const msg = `Recommend some books for User. \n UserInfo: ${userInfo} \n Reading History: ${bookInfo.flatMap(
           (book) => book,
         )} \n User Need: ${userReq})  } `;
-        setGeminiRes(["**CurrentModel**: ", geminiModel,"\n\n"]);
+        setGeminiRes(["**CurrentModel**: ", geminiModel, "\n\n"]);
 
         await geminiReq(msg);
       } catch (e) {
