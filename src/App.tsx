@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 type GeminiModelValue = "gemini-2.0-flash" | "gemini-2.0-flash-lite";
 
 const App = memo(() => {
-  const [myApiKey, setApiKey] = useState<string>();
+  const [myApiKey, setApiKey] = useState<string>(import.meta.env.VITE_API_KEY);
   const [bookInputCount, setBookInputCount] = useState<number>(1);
   const [geminiRes, setGeminiRes] = useState<string[]>([
     "책을 추천 받아 보십시오.",
@@ -136,6 +136,7 @@ const App = memo(() => {
                 placeholder="GOOGLE_AI_STUDIO_API_KEY"
                 type="text"
                 name="api-key"
+                defaultValue={import.meta.env.VITE_API_KEY}
                 form="form-api-key"
                 className="grow rounded-md border-2"
               ></input>
