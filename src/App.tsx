@@ -1,12 +1,28 @@
 import { Fragment, memo, useCallback, useState } from "react";
 import { GoogleGenAI } from "@google/genai";
 import ReactMarkdown from "react-markdown";
+
+//types
+type GeminiModelValue = "gemini-2.0-flash" | "gemini-2.0-flash-lite";
+
 const App = memo(() => {
   const [myApiKey, setApiKey] = useState<string>();
   const [bookInputCount, setBookInputCount] = useState<number>(1);
   const [geminiRes, setGeminiRes] = useState<string[]>([
     "책을 추천 받아 보십시오.",
   ]);
+  const [geminiModel, setGeminiModel] =
+    useState<GeminiModelValue>("gemini-2.0-flash");
+  // onChange 핸들러 함수 정의
+  const handleModelChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      // event.target.value는 항상 string이므로, 필요시 타입 단언 또는 변환
+      setGeminiModel(
+        event.target.value as GeminiModelValue /* as GeminiModelValue */,
+      );
+    },
+    [setGeminiModel],
+  ); // setGeminiModel은 일반적으로 안정적이므로 의존성 배열에 필수는 아님
 
   const onApiKeyFormSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,15 +38,17 @@ const App = memo(() => {
       const ai = new GoogleGenAI({
         apiKey: myApiKey,
       });
+      const tools = [{ googleSearch: {} }];
       const config = {
         responseMimeType: "text/plain",
+        tools,
         systemInstruction: [
           {
-            text: `한 번 요청이 들어가고 답변을 받아야 함. 다음 대화는 없음. 학교도서관용 서비스임.`,
+            text: `* **IMPORTANT** Language: Korean. \n You can only reply once and you never receive next message from user. \n * This service is for School Library in Republic of Korea. \n when you determine User's literacy, Consider the User's reading history.  \n Must consider the User's requirement. \n * You must state Author with Title \n When you recommend books, the number of books is about 3~5. \n When you recommend a translated book, You must state the Korean Title of the book. \n * **important** You must recommend for book that is fit for School Library of Republic of Korea. \n **IMPORTANT** Cross check with google search for check the book is in real world`,
           },
         ],
       };
-      const model = "gemini-2.0-flash-lite";
+      const model = geminiModel;
       const contents = [
         {
           role: "user",
@@ -52,7 +70,7 @@ const App = memo(() => {
         setGeminiRes((prev) => [...prev, chunk?.text ?? ""]);
       }
     },
-    [myApiKey],
+    [myApiKey, geminiModel],
   );
   const onApiReqFormSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,10 +86,10 @@ const App = memo(() => {
         const userReq: string = formData.get("api-req-user-req") as string;
         if (!userReq) throw new Error("요청내용을 입력해주십시오.");
         console.log(userInfo, bookInfo, userReq);
-        const msg = `다음 사용자가 읽을 만한 도서를 추천해줘 \n 사용자: ${userInfo} \n 최근 읽은 도서: ${bookInfo.flatMap(
+        const msg = `Recommend some books for User. \n UserInfo: ${userInfo} \n Reading History: ${bookInfo.flatMap(
           (book) => book,
-        )} \n 요청사항: ${userReq})  } `;
-        setGeminiRes([""]);
+        )} \n User Need: ${userReq})  } `;
+        setGeminiRes(["**CurrentModel**: ", geminiModel,"\n\n"]);
 
         await geminiReq(msg);
       } catch (e) {
@@ -82,18 +100,19 @@ const App = memo(() => {
         }
       }
     },
-    [geminiReq, myApiKey],
+    [geminiReq, myApiKey, geminiModel],
   );
 
   return (
     <Fragment>
       <div className="@container">
-        <article className="mx-auto max-w-2xl space-y-2 p-4">
+        <article className="mx-auto max-w-2xl space-y-6 p-4">
           <h1 className="text-center font-extrabold">
             DLS 도서추천 서비스 예시
           </h1>
-          <section className="flex flex-col space-y-2 border-2 px-5">
-            <h2>APIKEY</h2>
+          <section className="flex flex-col space-y-3 rounded-md border-2 px-5 py-2">
+            <h2 className="text-center text-lg font-bold">GEMINI SETTINGS</h2>
+            <h3 className="text-center font-bold">Api key Settings</h3>
             <section className="flex space-x-2">
               <input
                 placeholder="GOOGLE_AI_STUDIO_API_KEY"
@@ -123,10 +142,41 @@ const App = memo(() => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                링크
+                <span className="font-bold underline decoration-2 hover:bg-cyan-500/30">
+                  링크
+                </span>
               </a>
               를 통해 발급받을 수 있습니다.
             </p>
+            <h3 className="text-center font-bold">Model Select</h3>
+            <section className="mx-auto flex flex-row justify-between space-x-6">
+              <div>
+                <input
+                  type="radio"
+                  id="model-flash" // label과 연결할 id
+                  name="geminiModelChoice" // 그룹화를 위한 동일한 name
+                  value="gemini-2.0-flash" // 이 옵션의 값
+                  checked={geminiModel === "gemini-2.0-flash"} // 상태와 비교하여 checked 제어
+                  onChange={handleModelChange} // onChange 이벤트 사용
+                />
+                <label htmlFor="model-flash" className="">
+                  Gemini 2.0 Flash
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="model-flash-lite"
+                  name="geminiModelChoice" // 그룹화를 위한 동일한 name
+                  value="gemini-2.0-flash-lite"
+                  checked={geminiModel === "gemini-2.0-flash-lite"} // 상태와 비교하여 checked 제어
+                  onChange={handleModelChange}
+                />
+                <label htmlFor="model-flash-lite" className="">
+                  Gemini 2.0 Flash Lite
+                </label>
+              </div>
+            </section>
           </section>
 
           <section className="space-y-2 border-2 p-4">
