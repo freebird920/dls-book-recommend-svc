@@ -13,16 +13,17 @@ const App = memo(() => {
   ]);
   const [geminiModel, setGeminiModel] =
     useState<GeminiModelValue>("gemini-2.0-flash");
-  // onChange 핸들러 함수 정의
+
+  // useCallback
+  
   const handleModelChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      // event.target.value는 항상 string이므로, 필요시 타입 단언 또는 변환
       setGeminiModel(
         event.target.value as GeminiModelValue /* as GeminiModelValue */,
       );
     },
     [setGeminiModel],
-  ); // setGeminiModel은 일반적으로 안정적이므로 의존성 배열에 필수는 아님
+  );
 
   const onApiKeyFormSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,7 +63,17 @@ const App = memo(() => {
         ],
         systemInstruction: [
           {
-            text: `* **IMPORTANT** Language: Korean. \n You can only reply once and you never receive next message from user. \n * This service is for School Library in Republic of Korea. \n when you determine User's literacy, Consider the User's reading history.  \n Must consider the User's requirement. \n * You must state Author with Title \n When you recommend books, the number of books is about 3~5. \n When you recommend a translated book, You must state the Korean Title of the book. \n * **important** You must recommend for book that is fit for School Library of Republic of Korea. \n **IMPORTANT** Cross check with google search for check the book is in real world`,
+            text: `
+              * **IMPORTANT** Language: Korean. \n
+              You can only reply once and you never receive next message from user. \n
+              * This service is for School Library in Republic of Korea. \n
+              when you determine User's literacy, Consider the User's reading history.  \n 
+              Must consider the User's requirement. \n 
+              * You must state Author with Title \n 
+              When you recommend books, the number of books is about 3~5. \n 
+              When you recommend a translated book, You must state the Korean Title of the book. \n 
+              * **important** You must recommend for book that is fit for School Library of Republic of Korea. \n 
+              * **IMPORTANT** Cross check with google search for check if the book is in the real world`,
           },
         ],
       };
