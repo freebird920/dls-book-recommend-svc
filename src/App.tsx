@@ -15,7 +15,7 @@ const App = memo(() => {
     useState<GeminiModelValue>("gemini-2.0-flash");
 
   // useCallback
-  
+
   const handleModelChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setGeminiModel(
@@ -141,6 +141,16 @@ const App = memo(() => {
           <h1 className="text-center font-extrabold">
             DLS 도서추천 서비스 예시
           </h1>
+          <div className="text-right">
+            <a
+              className="font-black hover:bg-rose-500/30 px-1 rounded-md"
+              href="https://github.com/freebird920/dls-book-recommend-svc"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GITHUB: freebird920
+            </a>
+          </div>
           <section className="flex flex-col space-y-3 rounded-md border-2 px-5 py-2">
             <h2 className="text-center text-lg font-bold">GEMINI SETTINGS</h2>
             <h3 className="text-center font-bold">Api key Settings</h3>
