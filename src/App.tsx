@@ -3,7 +3,10 @@ import { GoogleGenAI, HarmBlockThreshold, HarmCategory } from "@google/genai";
 import ReactMarkdown from "react-markdown";
 
 //types
-type GeminiModelValue = "gemini-2.0-flash" | "gemini-2.0-flash-lite";
+type GeminiModelValue =
+  | "gemini-2.0-flash"
+  | "gemini-2.0-flash-lite"
+  | "gemini-2.5-flash-preview-05-20";
 
 const App = memo(() => {
   const [myApiKey, setApiKey] = useState<string>(import.meta.env.VITE_API_KEY);
@@ -11,8 +14,9 @@ const App = memo(() => {
   const [geminiRes, setGeminiRes] = useState<string[]>([
     "책을 추천 받아 보십시오.",
   ]);
-  const [geminiModel, setGeminiModel] =
-    useState<GeminiModelValue>("gemini-2.0-flash");
+  const [geminiModel, setGeminiModel] = useState<GeminiModelValue>(
+    "gemini-2.5-flash-preview-05-20",
+  );
 
   // useCallback
 
@@ -42,6 +46,9 @@ const App = memo(() => {
       const tools = [{ googleSearch: {} }];
       const config = {
         responseMimeType: "text/plain",
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
         tools,
         safetySettings: [
           {
@@ -143,7 +150,7 @@ const App = memo(() => {
           </h1>
           <div className="text-right">
             <a
-              className="font-black hover:bg-rose-500/30 px-1 rounded-md"
+              className="rounded-md px-1 font-black hover:bg-rose-500/30"
               href="https://github.com/freebird920/dls-book-recommend-svc"
               target="_blank"
               rel="noopener noreferrer"
@@ -192,6 +199,19 @@ const App = memo(() => {
             </p>
             <h3 className="text-center font-bold">Model Select</h3>
             <section className="mx-auto flex flex-row justify-between space-x-6">
+              <div>
+                <input
+                  type="radio"
+                  id="model-25-flash" // label과 연결할 id
+                  name="geminiModelChoice" // 그룹화를 위한 동일한 name
+                  value="gemini-2.5-flash-preview-05-20" // 이 옵션의 값
+                  checked={geminiModel === "gemini-2.5-flash-preview-05-20"} // 상태와 비교하여 checked 제어
+                  onChange={handleModelChange} // onChange 이벤트 사용
+                />
+                <label htmlFor="model-25-flash" className="">
+                  gemini-2.5-flash-preview-05-20
+                </label>
+              </div>
               <div>
                 <input
                   type="radio"
