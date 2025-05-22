@@ -147,8 +147,11 @@ const App = memo(() => {
       <div className="@container">
         <article className="mx-auto max-w-2xl space-y-6 p-4">
           <h1 className="text-center font-extrabold">
-            DLS 도서추천 서비스 예시
+            울산중앙중학교봉우리글숲도서관책추!
           </h1>
+          <p className="text-center text-xs text-neutral-500/30">
+            AI가 책을 추천해줄 수 있을 리 없잖아, 무리무리!(※무리가 아니었다?!)
+          </p>
           <div className="text-right">
             <a
               className="rounded-md px-1 font-black hover:bg-rose-500/30"
