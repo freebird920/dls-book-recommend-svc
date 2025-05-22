@@ -45,6 +45,7 @@ const App = memo(() => {
       });
       const tools = [{ googleSearch: {} }];
       const config = {
+        maxOutputTokens: 2000,
         responseMimeType: "text/plain",
         thinkingConfig: {
           thinkingBudget: 0,
@@ -126,7 +127,7 @@ const App = memo(() => {
         console.log(userInfo, bookInfo, userReq);
         const msg = `Recommend some books for User. \n UserInfo: ${userInfo} \n Reading History: ${bookInfo.flatMap(
           (book) => book,
-        )} \n User Need: ${userReq})  } `;
+        )} \n User Need: ${userReq}  } `;
         setGeminiRes(["**CurrentModel**: ", geminiModel, "\n\n"]);
 
         await geminiReq(msg);
