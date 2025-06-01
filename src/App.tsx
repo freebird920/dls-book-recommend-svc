@@ -150,7 +150,7 @@ const App = memo(() => {
             울산중앙중학교봉우리글숲도서관책추!
           </h1>
           <p className="text-center text-xs text-neutral-500/30">
-            AI가 책을 추천해줄 수 있을 리 없잖아, 무리무리!(※무리가 아니었다?!)
+            AI가 책을 제대로 추천해줄 수 있을 리 없잖아, 무리무리!(※무리가 아니었다?!)
           </p>
           <div className="text-right">
             <a
