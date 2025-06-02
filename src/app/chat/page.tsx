@@ -137,8 +137,8 @@ const ChatPage = memo(() => {
   return (
     <Fragment>
       <div className="@container">
-        <article className="mx-auto max-w-2xl space-y-2 p-4">
-          <h2 className="pt-10 text-center text-xl font-extrabold">
+        <article className="mx-auto max-w-2xl space-y-2">
+          <h2 className="text-center text-xl font-extrabold">
             울산중앙중학교봉우리글숲도서관책추!
           </h2>
           <p className="text-center text-xs text-neutral-500/30">

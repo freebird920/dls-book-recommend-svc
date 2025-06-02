@@ -42,11 +42,8 @@ const SettingsPage = () => {
   return (
     <>
       <div className="@container mx-auto my-5 flex max-w-[480px] flex-col select-none">
-        <h2 className="p-10 text-center text-2xl font-black">Settings Page</h2>
-        <p className="text-center text-xs text-neutral-500/30">
-          AI가 책을 제대로 추천해줄 수 있을 리 없잖아, 무리무리!(※무리가
-          아니었다?!)
-        </p>
+        <h2 className="text-center text-2xl font-black">Settings Page</h2>
+
         <section className="space-y-3 pb-4">
           <div className="text-right">
             <a
